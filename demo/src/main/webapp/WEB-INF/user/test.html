@@ -1,0 +1,10 @@
+<form:form modelAttribute="member" method="post" action="register">
+  <table>
+    <tr>
+      />
+      <td>성별</td>
+      <td><form:radiobuttons path="gender" items= "${genderCodeMap}"</td>
+    </tr>
+  </table>
+  <form:button name="register">등록</form:button>
+</form:form>

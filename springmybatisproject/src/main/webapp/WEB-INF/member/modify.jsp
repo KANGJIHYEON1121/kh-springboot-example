@@ -1,30 +1,69 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%> <%-- 헤더 영역 --%> <%@ include file="./header.jsp" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
 <%-- 헤더 영역 --%> <%@ include file="./header.jsp" %>
 
 <!-- 화면영역 -->
 <main>
-  <h2>MODIFY</h2>
-  <form:form modelAttribute="board" action="modify">
+  <h3>회원 정보 수정</h3>
+  <form:form modelAttribute="member" action="modify">
     <form:hidden path="no" />
     <table>
       <tr>
-        <td>Title</td>
-        <td><form:input path="title" /></td>
+        <td>id</td>
+        <td><form:input path="id" /></td>
         <td>
-          <font color="red"><form:errors path="title" /></font>
+          <font color="red"><form:errors path="id" /></font>
         </td>
       </tr>
       <tr>
-        <td>Writer</td>
-        <td><form:input path="writer" /></td>
+        <td>name</td>
+        <td><form:input path="name" /></td>
         <td>
-          <font color="red"><form:errors path="writer" /></font>
+          <font color="red"><form:errors path="name" /></font>
         </td>
       </tr>
       <tr>
-        <td>Content</td>
-        <td><form:textarea path="content" /></td>
+        <td>auth - 1</td>
         <td>
-          <font color="red"><form:errors path="content" /></font>
+          <form:select path="authList[0].auth">
+            <form:option value="" label="=== 선택해주세요 ===" />
+            <form:option value="ROLE_USER" label="사용자" />
+            <form:option value="ROLE_MEMBER" label="회원" />
+            <form:option value="ROLE_ADMIN" label="관리자" />
+          </form:select>
+        </td>
+        <td>
+          <font color="red"><form:errors path="authList[0].auth" /></font>
+        </td>
+      </tr>
+      <tr>
+        <td>auth - 2</td>
+        <td>
+          <form:select path="authList[1].auth">
+            <form:option value="" label="=== 선택해주세요 ===" />
+            <form:option value="ROLE_USER" label="사용자" />
+            <form:option value="ROLE_MEMBER" label="회원" />
+            <form:option value="ROLE_ADMIN" label="관리자" />
+          </form:select>
+        </td>
+        <td>
+          <font color="red"><form:errors path="authList[1].auth" /></font>
+        </td>
+      </tr>
+      <tr>
+        <td>auth - 3</td>
+        <td>
+          <form:select path="authList[2].auth">
+            <form:option value="" label="=== 선택해주세요 ===" />
+            <form:option value="ROLE_USER" label="사용자" />
+            <form:option value="ROLE_MEMBER" label="회원" />
+            <form:option value="ROLE_ADMIN" label="관리자" />
+          </form:select>
+        </td>
+        <td>
+          <font color="red"><form:errors path="authList[2].auth" /></font>
         </td>
       </tr>
     </table>
@@ -39,14 +78,14 @@
 
 <script>
   $(document).ready(function () {
-    var formObj = $("#board");
+    var formObj = $("#member");
     $("#btnModify").on("click", function () {
-      formObj.attr("action", "/board/modify");
+      formObj.attr("action", "/member/modify");
       formObj.attr("method", "post");
       formObj.submit();
     });
     $("#btnList").on("click", function () {
-      self.location = "/board/list";
+      self.location = "/member/list";
     });
   });
 </script>

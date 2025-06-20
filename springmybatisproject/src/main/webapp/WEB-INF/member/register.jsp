@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%> <%-- 헤더 영역 --%> <%@ include file="./header.jsp" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <!-- 화면영역 -->
 <main>
   <h3>회원 등록</h3>
-  <form:form modelAttribute="member" action="register">
+  <form:form modelAttribute="member" action="/member/register">
     <table>
       <tr>
         <td>아이디</td>

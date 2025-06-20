@@ -5,7 +5,7 @@
 <main>
   <div>
     <h2>${msg}</h2>
-    <%-- <a href="/board/list">List</a> --%>
+    <a href="/member/list">List</a>
   </div>
 </main>
 

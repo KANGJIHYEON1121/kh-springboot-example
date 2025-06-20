@@ -25,6 +25,7 @@ public class MemberController {
     @GetMapping(value = "/register")
     public String registerForm(Member member, Model model) throws Exception {
         log.info("UserRegisterForm");
+        model.addAttribute("member", member);
         return "member/register";
     }
 
@@ -33,6 +34,41 @@ public class MemberController {
     public String register(Member member, Model model) throws Exception {
         service.insert(member);
         model.addAttribute("msg", "등록이 완료되었습니다.");
+        return "member/success";
+    }
+
+    // 회원정보 전체리스트 출력
+    @GetMapping(value = "/list")
+    public String list(Model model) throws Exception {
+        model.addAttribute("list", service.selectAll());
+        return "member/list";
+    }
+
+    // 회원정보, 권한 출력(조인)
+    @GetMapping(value = "/read")
+    public String read(Member member, Model model) throws Exception {
+        model.addAttribute("member", service.selectJoin(member));
+        return "member/read";
+    }
+
+    // 회원삭제, 권한삭제
+    @PostMapping(value = "/remove")
+    public String remove(Member member, Model model) throws Exception {
+        service.delete(member);
+        model.addAttribute("msg", "삭제가 완료되었습니다.");
+        return "member/success";
+    }
+
+    @GetMapping("/modify")
+    public String modifyForm(Member member, Model model) throws Exception {
+        model.addAttribute(service.selectJoin(member));
+        return "member/modify";
+    }
+
+    @PostMapping("/modify")
+    public String modify(Member member, Model model) throws Exception {
+        service.update(member);
+        model.addAttribute("msg", "수정이 완료되었습니다.");
         return "member/success";
     }
 }

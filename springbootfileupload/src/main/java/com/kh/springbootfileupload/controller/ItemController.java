@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -94,51 +94,75 @@ public class ItemController {
         return "item/modify";
     }
 
+    // 수정내용 저장 요청
     @PostMapping("/modify")
     public String modify(Item item, Model model) throws Exception {
         MultipartFile file = item.getPicture();
 
         if (file != null && file.getSize() > 0) {
+            Item oldItem = itemService.read(item);
+            // 기존 외부 저장소 파일 삭제
+            String oldPitureUrl = oldItem.getPictureUrl();
+            // 파일로 인식되는 객체가 되는 순간.
+            deleteFile(oldPitureUrl);
+
             log.info("originalName: " + file.getOriginalFilename());
             log.info("size: " + file.getSize());
             log.info("contentType: " + file.getContentType());
-
             String createdFileName = uploadFile(file.getOriginalFilename(), file.getBytes());
-
             item.setPictureUrl(createdFileName);
         }
-        this.itemService.modify(item);
+        itemService.update(item);
         model.addAttribute("msg", "수정이 완료되었습니다.");
         return "item/success";
     }
 
-    @RequestMapping(value = "/remove", method = RequestMethod.GET)
-    public String removeForm(Integer itemId, Model model) throws Exception {
-        Item item = this.itemService.read(itemId);
-        model.addAttribute(item);
+    // 삭제 화면 요청
+    @GetMapping("/remove")
+    public String removeForm(Item item, Model model) throws Exception {
+        Item _item = itemService.read(item);
+        model.addAttribute("item", _item);
         return "item/remove";
     }
 
-    @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    // 삭제 내용 저장
+    @PostMapping("/remove")
     public String remove(Item item, Model model) throws Exception {
-        this.itemService.remove(item.getItemId());
-
-        model.addAttribute("msg", "삭제가 완료되었습니다.");
-
+        Item oldItem = itemService.read(item);
+        String oldPitureUrl = oldItem.getPictureUrl();
+        boolean flag = deleteFile(oldPitureUrl);
+        if (flag) {
+            itemService.delete(item);
+            model.addAttribute("msg", "삭제가 완료되었습니다.");
+        } else {
+            model.addAttribute("msg", "외부저장소 삭제 문제 발생했습니다.");
+        }
         return "item/success";
+    }
+
+    private boolean deleteFile(String fileName) throws Exception {
+        if (fileName.contains("..")) {
+            throw new IllegalArgumentException("잘못된 경로 입니다.");
+        }
+        File file = new File(uploadPath, fileName);
+
+        return (file.exists()) ? (file.delete()) : (false);
     }
 
     @ResponseBody
     @RequestMapping("/display")
-    public ResponseEntity<byte[]> displayFile(Integer itemId) throws Exception {
+    public ResponseEntity<byte[]> displayFile(Item item) throws Exception {
         InputStream in = null;
         ResponseEntity<byte[]> entity = null;
-        String fileName = itemService.getPicture(itemId);
+        Item _item = itemService.getPicture(item);
+        String fileName = _item.getPictureUrl();
         log.info("FILE NAME: " + fileName);
         try {
+            // uuid_kkk.jpg => "jpg"
             String formatName = fileName.substring(fileName.lastIndexOf(".") + 1);
             MediaType mType = getMediaType(formatName);
             HttpHeaders headers = new HttpHeaders();
+
             in = new FileInputStream(uploadPath + File.separator + fileName);
 
             if (mType != null) {
@@ -155,6 +179,7 @@ public class ItemController {
         return entity;
     }
 
+    // 멀티 미디어 타입을 리턴 "jpg" => MediaType.IMAGE_JPG
     private MediaType getMediaType(String formatName) {
         if (formatName != null) {
             if (formatName.equals("JPG")) {

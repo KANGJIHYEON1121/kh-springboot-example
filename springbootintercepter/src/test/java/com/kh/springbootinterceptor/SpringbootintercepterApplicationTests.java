@@ -1,10 +1,10 @@
-package com.kh.springbootintercepter;
+package com.kh.springbootinterceptor;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SpringbootintercepterApplicationTests {
+class SpringbootinterceptorApplicationTests {
 
 	@Test
 	void contextLoads() {

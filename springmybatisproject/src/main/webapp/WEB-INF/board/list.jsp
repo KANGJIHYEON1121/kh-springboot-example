@@ -4,7 +4,7 @@
 <!-- 화면 영역 -->
 <main>
     <h2>List</h2>
-    <a href="registerForm">게시판 입력</a>
+    <a href="register">게시판 입력</a>
     <table border="1">
         <tr>
             <th align="center" width="80">NO</th>

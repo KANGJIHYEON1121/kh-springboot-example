@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.springmybatisproject.domain.MybatisBoard;
+import com.kh.springmybatisproject.exception.BoardRecordNotFoundException;
 import com.kh.springmybatisproject.mapper.BoardDAO;
+
+import lombok.val;
 
 @Service
 public class BoardDAOServiceImpl implements BoardDAOService {
@@ -20,7 +23,11 @@ public class BoardDAOServiceImpl implements BoardDAOService {
 
     @Override
     public MybatisBoard select(MybatisBoard board) throws Exception {
-        return bd.select(board);
+        MybatisBoard _board = bd.select(board);
+        if (_board == null) {
+            throw new BoardRecordNotFoundException(board.getNo() + " 번 게시글은 없는 게시글입니다.");
+        }
+        return _board;
     }
 
     @Override

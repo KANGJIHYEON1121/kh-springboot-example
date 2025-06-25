@@ -24,6 +24,7 @@
     <div>
         <button type="submit" id="btnModify">Modify</button>
         <button type="submit" id="btnRemove">Remove</button>
+        <button type="submit" id="btnList">List</button>
     </div>
 </main>
 

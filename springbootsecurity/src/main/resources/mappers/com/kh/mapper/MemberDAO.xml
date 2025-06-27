@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.springbootsecurity.mapper.MemberDAO">
+    <!-- 외부 조인을 사용하여 얻은 검색 결과에 대한 매핑을 정의한다.  -->
+    <resultMap type="Member" id="memberMap">
+        <id property="no" column="NO" />
+        <result property="no" column="NO" />
+        <result property="id" column="ID" />
+        <result property="pw" column="PW" />
+        <result property="name" column="NAME" />
+        <result property="regDate" column="REG_DATE" />
+        <result property="updDate" column="UPD_DATE" />
+        <collection property="authList" resultMap="authMap">
+        </collection>
+    </resultMap>
+
+    <resultMap type="MemberAuth" id="authMap">
+        <result property="no" column="NO" />
+        <result property="auth" column="AUTH" />
+    </resultMap>
+
+    <insert id="insert"
+        parameterType="com.kh.springbootsecurity.domain.Member">
+        <selectKey keyProperty="no" resultType="int" order="BEFORE"> select MEMBER_SEQ.NEXTVAL FROM
+        DUAL </selectKey>INSERT INTO MEMBER(NO,ID,PW,NAME) VALUES (#{no}, #{id}, #{pw}, #{name})</insert>
+
+    <insert
+        id="insertAuth" parameterType="com.kh.springbootsecurity.domain.MemberAuth"> INSERT INTO
+        MEMBER_AUTH(NO,AUTH) VALUES (#{no}, #{auth})</insert>
+
+    <select id="selectJoin"
+        resultMap="memberMap"> SELECT M.NO,ID,PW,NAME,REG_DATE,UPD_DATE,AUTH FROM securitymember M
+        LEFT OUTER JOIN securitymember_AUTH A ON M.NO = A.NO WHERE M.ID = #{id} </select>
+
+    <select id="selectAll"
+        resultType="Member"> SELECT NO,ID,PW,NAME,REG_DATE FROM MEMBER ORDER BY REG_DATE DESC </select>
+
+    <update
+        id="update"> UPDATE MEMBER SET NAME = #{name} WHERE NO = #{no} </update>
+
+    <delete id="delete"> DELETE FROM MEMBER WHERE NO = #{no} </delete>
+
+    <delete id="deleteAuth"> DELETE FROM member_auth WHERE no = #{no} </delete>
 
 </mapper>

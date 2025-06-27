@@ -10,5 +10,9 @@
         <h1>accessError.jsp 입니다.</h1>
         <h3>접근 불가</h3>
         <h2>${msg}</h2>
+        <div>
+            <a href="/">HOME</a>
+        </div>
+
     </body>
 </html>

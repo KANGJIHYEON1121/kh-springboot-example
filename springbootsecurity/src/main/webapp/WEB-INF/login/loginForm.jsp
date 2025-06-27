@@ -25,9 +25,14 @@
             <input type="password" name="password" value="" placeholder="비밀번호">
         </div>
         <sec:csrfInput />
+        <!-- 로그인 상태유지 체크박스 -->
+        <div>
+            <input type="checkbox" name="remember-me"> 로그인 상태유지
+        </div>
         <div>
             <input type="submit" value="로그인">
         </div>
     </form>
+    <a href="/">HOME</a>
 </body>
 </html>

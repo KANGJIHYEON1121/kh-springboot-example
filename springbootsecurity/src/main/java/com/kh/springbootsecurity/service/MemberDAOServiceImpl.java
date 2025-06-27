@@ -40,6 +40,12 @@ public class MemberDAOServiceImpl implements MemberDAOService {
     }
 
     @Override
+    // 회원 정보 검색(id로 검색)
+    public Member selectOne(Member member) throws Exception {
+        return memberDAO.selectOne(member);
+    }
+
+    @Override
     // 회원정보 전체 출력
     public List<Member> selectAll() throws Exception {
         return memberDAO.selectAll();
